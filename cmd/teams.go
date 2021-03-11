@@ -24,6 +24,7 @@ package cmd
 import (
 	"fmt"
 
+	"bender/bender"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +33,13 @@ var teamsCmd = &cobra.Command{
 	Use:   "teams",
 	Short: "",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("teams called")
+		resp, err := bender.GetTeams(url)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(resp)
+		return
 	},
 }
 
