@@ -17,6 +17,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"text/tabwriter"
 
 	"bender/bender"
 	"github.com/spf13/cobra"
@@ -27,12 +29,18 @@ var categoriesCmd = &cobra.Command{
 	Use:   "categories",
 	Short: "",
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := bender.GetCategories(url)
+		categories, err := bender.GetCategories(url)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(resp)
+		w := new(tabwriter.Writer)
+		w.Init(os.Stdout, 8, 8, 8, '\t', 0)
+
+		fmt.Fprintln(w, "ID\tName\tDescription")
+		for _, category := range categories {
+			fmt.Fprintln(w, fmt.Sprintf("%d\t%s\t%s\n", category.ID, category.Name, category.Description))
+		}
 		return
 	},
 }

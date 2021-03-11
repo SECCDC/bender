@@ -33,12 +33,15 @@ var teamsCmd = &cobra.Command{
 	Use:   "teams",
 	Short: "",
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := bender.GetTeams(url)
+		teams, err := bender.GetTeams(url)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(resp)
+		fmt.Println("ID\t\tAbbrev\t\tName")
+		for _, team := range teams {
+			fmt.Printf("%d\t\t%s\t\t%s\n", team.TeamID, team.Abbrev, team.Name)
+		}
 		return
 	},
 }

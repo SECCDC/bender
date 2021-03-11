@@ -23,6 +23,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"text/tabwriter"
 
 	"bender/bender"
 	"github.com/spf13/cobra"
@@ -33,12 +35,18 @@ var targetsCmd = &cobra.Command{
 	Use:   "targets",
 	Short: "",
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := bender.GetTargets(url)
+		targets, err := bender.GetTargets(url)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(resp)
+		w := new(tabwriter.Writer)
+		w.Init(os.Stdout, 8, 8, 8, '\t', 0)
+
+		fmt.Fprintln(w, "ID\tName\tOS")
+		for _, target := range targets {
+			fmt.Fprintln(w, fmt.Sprintf("%d\t%s\t%s\n", target.ID, target.Name, target.OS))
+		}
 		return
 	},
 }
